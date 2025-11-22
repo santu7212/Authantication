@@ -1,6 +1,8 @@
 // step 1 cretae user
+import bcrypt from "bcryptjs";
 
 import User from "../models/user.model.js";
+import transporter from "../config/nodemailer.js";
 
 const register = async (req, res) => {
   try {
@@ -10,7 +12,7 @@ const register = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Fill the field for register" });
     }
-    const existingUser = await User.findById({ email });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       res.status(400).json({
         success: false,
@@ -21,17 +23,33 @@ const register = async (req, res) => {
     const user = new User({ username, email, password });
     await user.save();
 
+    const token = user.generateJWT();
+
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    //  sending welcome email after register
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: "Welcome to SantuHub",
+      text: `Welcome to SantuHub website
+      . yor account has been registerd with
+       this email id: ${email}`,
+    };
+    await transporter.sendMail(mailOptions);
 
     return res.status(200).json({
       success: true,
       message: "User registered successfully",
-      user: { id, username, email },
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
     });
   } catch (error) {
     console.log(error.message);
@@ -52,7 +70,7 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "user with this email does not exist please liginj first",
+        message: "user with this email does not exist please register first",
       });
     }
 
@@ -62,6 +80,7 @@ const login = async (req, res) => {
         .status(400)
         .json({ success: false, message: "incorrect email or password" });
     }
+    const token = user.generateJWT();
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -71,7 +90,11 @@ const login = async (req, res) => {
     });
     return res.status(200).json({
       success: true,
-      user: { username, email, token },
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
       message: "Login successfully",
     });
   } catch (error) {
@@ -82,9 +105,10 @@ const login = async (req, res) => {
 
 const logOut = async (req, res) => {
   try {
-    res.clearCookie("token", token, {
+    res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
     });
     return res
       .status(200)
@@ -95,4 +119,4 @@ const logOut = async (req, res) => {
   }
 };
 
-export { register, login ,logOut};
+export { register, login, logOut };
