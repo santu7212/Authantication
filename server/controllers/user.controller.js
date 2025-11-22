@@ -53,7 +53,7 @@ const register = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -99,7 +99,7 @@ const login = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ success: false, message: "Fail to login" });
+    return res.status(500).json({ success: false, message: "Fail to login" });
   }
 };
 
@@ -115,7 +115,7 @@ const logOut = async (req, res) => {
       .json({ success: true, message: "User logout successfully" });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ success: false, message: "Fail to logout" });
+    return res.status(500).json({ success: false, message: "Fail to logout" });
   }
 };
 
@@ -157,9 +157,54 @@ const sendVerifyOtp = async (req, res) => {
     return res
       .status(200)
       .json({ success: true, message: "Your account is verified" });
-  } catch (error) { 
+  } catch (error) {
     console.log(error.message);
-    res.status(500).json({ success: false, message: "Fail to send OTP" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Fail to send OTP" });
   }
 };
-export { register, login, logOut, sendVerifyOtp };
+
+const verifyEmail = async (req, res) => {
+  try {
+    const { userId, otp } = req.body;
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "user id not found " });
+    }
+
+    if (!otp) {
+      return res
+        .status(400)
+        .json({ success: false, message: "OTP is not found " });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found " });
+    }
+
+    if (user.verifyOtp == "" || user.verifyOtp == !otp) {
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
+    }
+    if (user.verifyOtpExpiresAt > String(Date.now() + 24 * 60 * 60 * 1000)) {
+      return res.status(400).json({
+        success: false,
+        message: "Your OTP has expired please generate new OTP",
+      });
+    }
+    user.isAccountVerified = true;
+    (user.verifyOtp = ""), (user.verifyOtpExpiresAt = 0), await user.save();
+    return res
+      .status(200)
+      .json({ success: true, message: "Verified your account" });
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "Fail to verify email" });
+  }
+};
+export { register, login, logOut, sendVerifyOtp, verifyEmail };
