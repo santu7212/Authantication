@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    resteOtp: {
+    resetOtp: {
       type: String,
       default: "",
     },

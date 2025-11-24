@@ -155,12 +155,10 @@ const sendVerifyOtp = async (req, res) => {
     };
     await transporter.sendMail(mailOptions);
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "OTP is sent to your account successfully",
-      });
+    return res.status(200).json({
+      success: true,
+      message: "OTP is sent to your account successfully",
+    });
   } catch (error) {
     console.log(error.message);
     return res
@@ -202,12 +200,10 @@ const verifyEmail = async (req, res) => {
     }
     user.isAccountVerified = true;
     (user.verifyOtp = ""), (user.verifyOtpExpiresAt = 0), await user.save();
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Your account is verified successfully",
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Your account is verified successfully",
+    });
   } catch (error) {
     console.log(error.message);
     return res
@@ -246,7 +242,7 @@ const sendResetOTP = async (req, res) => {
 
     const otp = Math.floor(100000 + Math.random() * 900000);
     console.log(otp);
-    user.resteOtp = otp;
+    user.resetOtp = otp;
     user.resteOtpExpiresAt = Date.now() + 16 * 60 * 1000;
 
     await user.save();
@@ -259,10 +255,73 @@ const sendResetOTP = async (req, res) => {
     };
     await transporter.sendMail(mailOptions);
 
-    return res.status(200).json({success:true,message:"OTP is sent for reset your password"})
+    return res
+      .status(200)
+      .json({ success: true, message: "OTP is sent for reset your password" });
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ success: false, message: error.message });
   }
 };
-export { register, login, logOut, sendVerifyOtp, verifyEmail, isAuthanticated,sendResetOTP };
+
+const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    if (!email) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email is not registered" });
+    }
+    if (!otp) {
+      return res
+        .status(400)
+        .json({ success: false, message: "OTP is not found" });
+    }
+    if (!newPassword) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Please provide new password" });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
+    }
+
+    if ( !user.resetOtp) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP (EMPTY)",
+      });
+    }
+
+    if (user.resetOtp !== otp) {
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
+    }
+    if (user.resteOtpExpiresAt < Date.now()) {
+      return res
+        .status(400)
+        .json({ success: false, message: "OTP has expired" });
+    } 
+      user.password=newPassword,
+      user.resetOtp=""
+      user.resteOtpExpiresAt=0
+      await user.save()
+      return res.status(200).json({success:true,message:"Password Reset Successfully"})
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export {
+  register,
+  login,
+  logOut,
+  sendVerifyOtp,
+  verifyEmail,
+  isAuthanticated,
+  sendResetOTP,
+  resetPassword,
+};
