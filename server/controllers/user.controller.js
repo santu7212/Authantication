@@ -319,7 +319,7 @@ const resetPassword = async (req, res) => {
 const getUserDetails = async (req, res) => {
   try {
     const { userId } = req.body;
-    console.log(userId);
+    // console.log(userId);
     
     if (!userId) {
       return res
@@ -333,7 +333,7 @@ const getUserDetails = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
     return (
-      res.status(200),
+      res.status(200).
       json({
         success: true,
         userData: {
