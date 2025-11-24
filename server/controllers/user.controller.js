@@ -208,4 +208,16 @@ const verifyEmail = async (req, res) => {
       .json({ success: false, message: "Fail to verify email" });
   }
 };
-export { register, login, logOut, sendVerifyOtp, verifyEmail };
+
+const isAuthanticated=async(req,res)=>{
+  try {
+    return res.status(200).json({success:true,message:"You are authanticated"})
+    
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({success:false,message:"User is not authanticated"})
+    
+    
+  }
+}
+export { register, login, logOut, sendVerifyOtp, verifyEmail ,isAuthanticated};
