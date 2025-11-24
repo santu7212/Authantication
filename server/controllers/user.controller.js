@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 
 import User from "../models/user.model.js";
 import transporter from "../config/nodemailer.js";
+import { json } from "express";
 
 const register = async (req, res) => {
   try {
@@ -156,7 +157,10 @@ const sendVerifyOtp = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "OTP is sent to your account successfully" });
+      .json({
+        success: true,
+        message: "OTP is sent to your account successfully",
+      });
   } catch (error) {
     console.log(error.message);
     return res
@@ -189,7 +193,7 @@ const verifyEmail = async (req, res) => {
     if (user.verifyOtp !== otp) {
       return res.status(400).json({ success: false, message: "Invalid OTP" });
     }
-    
+
     if (user.verifyOtpExpiresAt > String(Date.now() + 24 * 60 * 60 * 1000)) {
       return res.status(400).json({
         success: false,
@@ -200,7 +204,10 @@ const verifyEmail = async (req, res) => {
     (user.verifyOtp = ""), (user.verifyOtpExpiresAt = 0), await user.save();
     return res
       .status(200)
-      .json({ success: true, message: "Your account is verified successfully" });
+      .json({
+        success: true,
+        message: "Your account is verified successfully",
+      });
   } catch (error) {
     console.log(error.message);
     return res
@@ -209,15 +216,53 @@ const verifyEmail = async (req, res) => {
   }
 };
 
-const isAuthanticated=async(req,res)=>{
+const isAuthanticated = async (req, res) => {
   try {
-    return res.status(200).json({success:true,message:"You are authanticated"})
-    
+    return res
+      .status(200)
+      .json({ success: true, message: "You are authanticated" });
   } catch (error) {
     console.log(error.message);
-    return res.status(500).json({success:false,message:"User is not authanticated"})
-    
-    
+    return res
+      .status(500)
+      .json({ success: false, message: "User is not authanticated" });
   }
-}
-export { register, login, logOut, sendVerifyOtp, verifyEmail ,isAuthanticated};
+};
+
+const sendResetOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res
+        .status(400)
+        .json({ success: false, message: "This email is not registered" });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    console.log(otp);
+    user.resteOtp = otp;
+    user.resteOtpExpiresAt = Date.now() + 16 * 60 * 1000;
+
+    await user.save();
+
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: "RSET PASSWORD",
+      text: `Your one time password is   ${otp} for reseting yor account`,
+    };
+    await transporter.sendMail(mailOptions);
+
+    return res.status(200).json({success:true,message:"OTP is sent for reset your password"})
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+export { register, login, logOut, sendVerifyOtp, verifyEmail, isAuthanticated,sendResetOTP };
