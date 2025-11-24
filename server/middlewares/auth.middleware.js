@@ -12,6 +12,7 @@ const verifyJWT = async (req, res, next) => {
         .status(404)
         .json({ success: false, message: "Unauthorized Request Login Again" });
     }
+    next();
   } catch (error) {
     console.log(error.message);
     return res
