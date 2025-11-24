@@ -148,7 +148,7 @@ const sendVerifyOtp = async (req, res) => {
 
     const mailOptions = {
       from: process.env.SENDER_EMAIL,
-      to: email,
+      to: user.email,
       subject: " OTP Verifiaction",
       text: `Your Account verification otp is ${otp}`,
     };
@@ -156,7 +156,7 @@ const sendVerifyOtp = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "Your account is verified" });
+      .json({ success: true, message: "OTP is sent to your account successfully" });
   } catch (error) {
     console.log(error.message);
     return res
@@ -186,9 +186,10 @@ const verifyEmail = async (req, res) => {
         .json({ success: false, message: "User not found " });
     }
 
-    if (user.verifyOtp == "" || user.verifyOtp == !otp) {
+    if (user.verifyOtp !== otp) {
       return res.status(400).json({ success: false, message: "Invalid OTP" });
     }
+    
     if (user.verifyOtpExpiresAt > String(Date.now() + 24 * 60 * 60 * 1000)) {
       return res.status(400).json({
         success: false,
@@ -199,7 +200,7 @@ const verifyEmail = async (req, res) => {
     (user.verifyOtp = ""), (user.verifyOtpExpiresAt = 0), await user.save();
     return res
       .status(200)
-      .json({ success: true, message: "Verified your account" });
+      .json({ success: true, message: "Your account is verified successfully" });
   } catch (error) {
     console.log(error.message);
     return res

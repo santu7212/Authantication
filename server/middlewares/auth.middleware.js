@@ -1,24 +1,21 @@
-import jwt from "jsonwebtoken";
-
-const verifyJWT = async (req, res, next) => {
+ import jwt from "jsonwebtoken"
+ const verifyJWT = (req, res, next) => {
   try {
-    const token = req.cookies;
-
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    if (decodedToken.id) {
-      req.body.userId = decodedToken.id;
-    } else {
-      return res
-        .status(404)
-        .json({ success: false, message: "Unauthorized Request Login Again" });
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ success: false, message: "Token missing. Login again" });
     }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    req.body = req.body || {};       // 🔥 FIX
+    req.body.userId = decoded.id;    // safe now
+
     next();
   } catch (error) {
-    console.log(error.message);
-    return res
-      .status(500)
-      .json({ success: false, message: "Error in Verify JWT" });
+    console.log("JWT ERROR:", error.message);
+    return res.status(401).json({ success: false, message: "Invalid or expired token" });
   }
 };
 
-export default verifyJWT;
+export default verifyJWT
