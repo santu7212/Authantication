@@ -289,7 +289,7 @@ const resetPassword = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
-    if ( !user.resetOtp) {
+    if (!user.resetOtp) {
       return res.status(400).json({
         success: false,
         message: "Invalid OTP (EMPTY)",
@@ -303,12 +303,48 @@ const resetPassword = async (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "OTP has expired" });
-    } 
-      user.password=newPassword,
-      user.resetOtp=""
-      user.resteOtpExpiresAt=0
-      await user.save()
-      return res.status(200).json({success:true,message:"Password Reset Successfully"})
+    }
+    (user.password = newPassword), (user.resetOtp = "");
+    user.resteOtpExpiresAt = 0;
+    await user.save();
+    return res
+      .status(200)
+      .json({ success: true, message: "Password Reset Successfully" });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getUserDetails = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    console.log(userId);
+    
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User id is not found" });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
+    }
+    return (
+      res.status(200),
+      json({
+        success: true,
+        userData: {
+          name: user.username,
+          isAccountVerified: user.isAccountVerified,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        },
+        message: "User detail fetch successfully",
+      })
+    );
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ success: false, message: error.message });
@@ -324,4 +360,5 @@ export {
   isAuthanticated,
   sendResetOTP,
   resetPassword,
+  getUserDetails,
 };
