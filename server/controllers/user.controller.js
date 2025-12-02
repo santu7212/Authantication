@@ -1,9 +1,9 @@
 // step 1 cretae user
-import bcrypt from "bcryptjs";
 
+import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 import transporter from "../config/nodemailer.js";
-import { json } from "express";
+
 
 const register = async (req, res) => {
   try {
