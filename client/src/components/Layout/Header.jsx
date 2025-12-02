@@ -1,41 +1,87 @@
- import React from "react";
+ import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const Header = () => {
-  return (
-    <header className="shadow-md bg-white">
-      <nav className="max-w-6xl mx-auto flex items-center justify-between py-4 px-6">
-        {/* Logo / Title */}
-        <h1 className="text-2xl font-bold text-blue-600 tracking-wide">
-          MyApp
-        </h1>
+  const [open, setOpen] = useState(false);
 
-        {/* Navigation Links */}
-        <ul className="flex items-center gap-6 text-gray-700 text-lg">
+  return (
+    <header className="bg-[#0E172A] text-white shadow-[0_2px_12px_rgba(0,0,0,0.5)] sticky top-0 z-50 backdrop-blur-md">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex items-center justify-between">
+
+        {/* Logo */}
+        <NavLink to="/">
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-wide">
+            <span className="text-blue-500">My</span>
+            <span className="text-red-500">Auth</span>
+          </h1>
+        </NavLink>
+
+        {/* Hamburger — Mobile */}
+        <button
+          className="md:hidden text-3xl"
+          onClick={() => setOpen(!open)}
+        >
+          {open ? "✖" : "☰"}
+        </button>
+
+        {/* Navigation */}
+        <ul
+          className={`flex flex-col md:flex-row gap-6 md:gap-10 font-medium absolute md:static left-0 w-full md:w-auto px-6 md:px-0 transition-all duration-300 ${
+            open
+              ? "top-16 py-6 bg-[#0E172A] shadow-lg"
+              : "top-[-400px]"
+          }`}
+        >
           <li>
-            <a href="/" className="hover:text-blue-600 transition duration-200">
+            <NavLink
+              to="/"
+              onClick={() => setOpen(false)}
+              className="hover:text-blue-500 duration-200"
+            >
               Home
-            </a>
+            </NavLink>
           </li>
+
           <li>
-            <a href="/about" className="hover:text-blue-600 transition duration-200">
-              About
-            </a>
-          </li>
-          <li>
-            <a href="/login" className="hover:text-blue-600 transition duration-200">
+            <NavLink
+              to="/login"
+              onClick={() => setOpen(false)}
+              className="hover:text-blue-500 duration-200"
+            >
               Login
-            </a>
+            </NavLink>
           </li>
+
           <li>
-            <a
-              href="/register"
-              className="bg-blue-600 text-white px-4 py-1.5 rounded-md hover:bg-blue-700 transition duration-200"
+            <NavLink
+              to="/register"
+              onClick={() => setOpen(false)}
+              className="bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 duration-200"
             >
               Register
-            </a>
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/verify-email"
+              onClick={() => setOpen(false)}
+              className="hover:text-blue-500 duration-200"
+            >
+              Verify
+            </NavLink>
+          </li>
+
+          <li>
+            <button
+              onClick={() => setOpen(false)}
+              className="hover:text-red-500 duration-200"
+            >
+              Logout
+            </button>
           </li>
         </ul>
-      </nav>
+      </div>
     </header>
   );
 };
