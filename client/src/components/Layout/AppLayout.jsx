@@ -1,16 +1,23 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import Header from './Header'
-import Footer from './Footer'
+ import Header from "./Header";
+import Footer from "./Footer";
+import { Outlet } from "react-router-dom";
 
 const AppLayout = () => {
   return (
-     <>
-     <Header/>
-     <Outlet/>
-     <Footer/>
-     </>
-  )
-}
+    <div className="min-h-screen flex flex-col bg-[#0E172A]">
 
-export default AppLayout
+      {/* Header */}
+      <Header />
+
+      {/* Main Content (Hero, Login pages, etc.) */}
+      <main className="flex-grow bg-[#111C2E]">
+        <Outlet />
+      </main>
+
+      {/* Footer */}
+      <Footer />
+    </div>
+  );
+};
+
+export default AppLayout;

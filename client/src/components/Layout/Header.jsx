@@ -5,20 +5,20 @@ const Header = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="bg-white text-gray-800 shadow sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex items-center justify-between">
+    <header className="bg-[#0E172A] text-white shadow-md sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-5 flex items-center justify-between">
 
-        {/* Logo */}
+        {/* Brand */}
         <NavLink to="/">
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-wide">
-            <span className="text-teal-600">My</span>
-            <span className="text-gray-600">Auth</span>
+          <h1 className="text-3xl font-extrabold tracking-wide">
+            <span className="text-[#06B6D4]">My</span>
+            <span className="text-gray-200">Auth</span>
           </h1>
         </NavLink>
 
-        {/* Hamburger — Mobile */}
+        {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-3xl"
+          className="md:hidden text-4xl"
           onClick={() => setOpen(!open)}
         >
           {open ? "✖" : "☰"}
@@ -26,18 +26,17 @@ const Header = () => {
 
         {/* Navigation */}
         <ul
-          className={`flex flex-col md:flex-row gap-6 md:gap-10 font-medium absolute md:static left-0 w-full md:w-auto px-6 md:px-0 transition-all duration-300 bg-white md:bg-transparent ${
-            open ? "top-16 py-6 shadow-md" : "top-[-450px]"
+          className={`flex flex-col md:flex-row gap-7 text-lg font-medium absolute md:static left-0 w-full md:w-auto px-6 md:px-0 bg-[#0E172A] transition-all duration-300 ${
+            open ? "top-20 py-6 shadow-lg" : "top-[-500px]"
           }`}
         >
           <li>
             <NavLink
               to="/"
-              onClick={() => setOpen(false)}
               className={({ isActive }) =>
                 isActive
-                  ? "text-teal-600 underline underline-offset-4 font-semibold"
-                  : "hover:text-teal-600 duration-200"
+                  ? "text-[#06B6D4] font-semibold underline underline-offset-4"
+                  : "hover:text-[#06B6D4] transition"
               }
             >
               Home
@@ -47,52 +46,14 @@ const Header = () => {
           <li>
             <NavLink
               to="/login"
-              onClick={() => setOpen(false)}
               className={({ isActive }) =>
                 isActive
-                  ? "text-teal-600 underline underline-offset-4 font-semibold"
-                  : "hover:text-teal-600 duration-200"
+                  ? "text-[#06B6D4] font-semibold underline underline-offset-4"
+                  : "hover:text-[#06B6D4] transition"
               }
             >
               Login
             </NavLink>
-          </li>
-
-          <li>
-            <NavLink
-              to="/register"
-              onClick={() => setOpen(false)}
-              className={({ isActive }) =>
-                isActive
-                  ? "bg-teal-600 text-white px-4 py-2 rounded-md font-semibold"
-                  : "bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-700 duration-200"
-              }
-            >
-              Register
-            </NavLink>
-          </li>
-
-          <li>
-            <NavLink
-              to="/verify-email"
-              onClick={() => setOpen(false)}
-              className={({ isActive }) =>
-                isActive
-                  ? "text-teal-600 underline underline-offset-4 font-semibold"
-                  : "hover:text-teal-600 duration-200"
-              }
-            >
-              Verify
-            </NavLink>
-          </li>
-
-          <li>
-            <button
-              onClick={() => setOpen(false)}
-              className="hover:text-red-600 duration-200"
-            >
-              Logout
-            </button>
           </li>
         </ul>
       </div>
