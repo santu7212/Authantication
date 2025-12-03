@@ -1,4 +1,9 @@
+import { useNavigate } from "react-router-dom";
+
+ 
+ 
  const HeroSection = () => {
+    const navigate=useNavigate()
   return (
     <section className="bg-[#111C2E] text-white min-h-[80vh] flex items-center">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -17,8 +22,8 @@
           </p>
 
           <div className="flex justify-center md:justify-start">
-            <button className="bg-[#06B6D4] hover:bg-[#0894aa] text-white font-semibold px-6 py-3 rounded-md transition">
-              Get Started →
+            <button onClick={()=>navigate("/register")} className="bg-[#06B6D4] hover:bg-[#0894aa] text-white font-semibold px-6 py-3 rounded-md transition">
+              Create Account →
             </button>
           </div>
         </div>

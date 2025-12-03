@@ -1,10 +1,11 @@
  import React from "react";
+import { NavLink } from "react-router-dom";
 
 const Login = () => {
   return (
     <div className="min-h-[calc(100vh-140px)] bg-[#111C2E] flex justify-center items-center px-4">
 
-      <form className="w-full max-w-sm bg-white p-6 rounded-xl shadow-xl flex flex-col gap-5 animate-fadein">
+      <form className="w-full max-w-sm bg-white p-6 rounded-xl shadow-xl flex flex-col gap-5">
 
         {/* Heading */}
         <h2 className="text-2xl font-bold text-center text-[#06B6D4]">
@@ -43,12 +44,12 @@ const Login = () => {
 
         {/* Forgot Password */}
         <div className="text-right">
-          <a
-            href="#"
+          <NavLink
+            to="/forgot-password"
             className="text-sm text-[#06B6D4] hover:underline"
           >
             Forgot password?
-          </a>
+          </NavLink>
         </div>
 
         {/* Submit Button */}
@@ -63,9 +64,12 @@ const Login = () => {
         {/* Signup Link */}
         <p className="text-center text-sm text-gray-600">
           Don't have an account?{" "}
-          <a href="#" className="text-[#06B6D4] font-semibold hover:underline">
+          <NavLink
+            to="/register"
+            className="text-[#06B6D4] font-semibold hover:underline"
+          >
             Sign up
-          </a>
+          </NavLink>
         </p>
 
       </form>
