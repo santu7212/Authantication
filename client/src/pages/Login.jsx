@@ -1,16 +1,27 @@
 import React, { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { AppContext } from "../components/context/AppContext";
+import axios from "axios"
+import { toast } from "react-toastify";
 
 const Login = () => {
-  const { backendURL, setIsLoggedIn } = useContext(AppContext);
-  const handleLoginFormSubmit = async(FormData) => {
+
+  const navigate=useNavigate()
+  const { backendURL} = useContext(AppContext);
+  const handleLoginFormSubmit = async(e) => {
+    e.preventDefault();
 
    try {
 
-    await axios.post(backendURL + "/api/user/login",{email,password})
-     const formInputData = Object.fromEntries(FormData.entries());
-     console.log(formInputData);
+     const formData=new FormData(e.target)
+     const {email,password} = Object.fromEntries(formData.entries());
+     const {data}=await axios.post(backendURL + "/api/user/login",{email,password})
+     if(data.success){
+      toast.success("Login successfull🎉")
+      navigate("/")
+
+     }
+    
    } catch (error) {
     console.log(error.message);
     
@@ -20,7 +31,7 @@ const Login = () => {
   return (
     <div className="min-h-[calc(100vh-140px)] bg-[#111C2E] flex justify-center items-center px-4">
       <form
-        action={handleLoginFormSubmit}
+        onSubmit={handleLoginFormSubmit}
         className="w-full max-w-sm bg-white p-6 rounded-xl shadow-xl flex flex-col gap-5"
       >
         <h2 className="text-2xl font-bold text-center text-[#06B6D4]">Login</h2>
