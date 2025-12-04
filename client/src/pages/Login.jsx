@@ -1,23 +1,27 @@
- import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { AppContext } from "../components/context/AppContext";
 
 const Login = () => {
+  const { backendURL } = useContext(AppContext);
+  const handleLoginFormSubmit = (FormData) => {
+    const formInputData = Object.fromEntries(FormData.entries());
+    console.log(formInputData);
+  };
   return (
     <div className="min-h-[calc(100vh-140px)] bg-[#111C2E] flex justify-center items-center px-4">
+      <form
+        action={handleLoginFormSubmit}
+        className="w-full max-w-sm bg-white p-6 rounded-xl shadow-xl flex flex-col gap-5"
+      >
+        <h2 className="text-2xl font-bold text-center text-[#06B6D4]">Login</h2>
 
-      <form className="w-full max-w-sm bg-white p-6 rounded-xl shadow-xl flex flex-col gap-5">
-
-        {/* Heading */}
-        <h2 className="text-2xl font-bold text-center text-[#06B6D4]">
-          Login
-        </h2>
-
-        {/* Email */}
         <div className="flex flex-col gap-1">
           <label htmlFor="email" className="font-semibold text-gray-700">
             Email
           </label>
           <input
+            name="email"
             id="email"
             type="email"
             placeholder="Enter your email"
@@ -27,12 +31,12 @@ const Login = () => {
           />
         </div>
 
-        {/* Password */}
         <div className="flex flex-col gap-1">
           <label htmlFor="password" className="font-semibold text-gray-700">
             Password
           </label>
           <input
+            name="password"
             id="password"
             type="password"
             placeholder="Enter your password"
@@ -42,17 +46,15 @@ const Login = () => {
           />
         </div>
 
-        {/* Forgot Password */}
         <div className="text-right">
           <NavLink
-            to="/forgot-password"
+            to="/reset-password"
             className="text-sm text-[#06B6D4] hover:underline"
           >
             Forgot password?
           </NavLink>
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className="bg-[#06B6D4] hover:bg-[#0894AA] text-white py-2 rounded-md 
@@ -61,7 +63,6 @@ const Login = () => {
           Log In
         </button>
 
-        {/* Signup Link */}
         <p className="text-center text-sm text-gray-600">
           Don't have an account?{" "}
           <NavLink
@@ -71,9 +72,7 @@ const Login = () => {
             Sign up
           </NavLink>
         </p>
-
       </form>
-
     </div>
   );
 };
