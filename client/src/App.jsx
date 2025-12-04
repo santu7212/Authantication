@@ -6,6 +6,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import AppLayout from "./components/Layout/AppLayout";
 import ErrorPage from "./pages/ErrorPage";
 import Register from "./pages/Register";
+ import { ToastContainer, toast } from 'react-toastify';
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,12 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  return <RouterProvider router={router}></RouterProvider>;
+  return (
+    <>
+      <ToastContainer position="top-center" autoClose={2000} />
+      <RouterProvider router={router} />
+    </>
+  );
 };
 
 export default App;

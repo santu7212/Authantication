@@ -1,11 +1,44 @@
- import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useContext } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { AppContext } from "../components/context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const { backendURL } = useContext(AppContext);
+  const handleRegisterUser = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.target);
+      const { username, email, password } = Object.fromEntries(
+        formData.entries()
+      );
+      console.log({ username, email, password });
+
+      axios.defaults.withCredentials = true;
+      const { data } = await axios.post(backendURL + "/api/user/register", {
+        username,
+        email,
+        password,
+      });
+      if (data.success) {
+         toast.success("Rgistered Successful! Please Login now 🎉");
+        navigate("/login");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    }
+  };
   return (
     <div className="min-h-[80vh] bg-[#111C2E] flex items-center justify-center px-4">
-      <form className="bg-white w-full max-w-md rounded-xl shadow-xl p-8 space-y-6">
-
+      <form
+        onSubmit={handleRegisterUser}
+        className="bg-white w-full max-w-md rounded-xl shadow-xl p-8 space-y-6"
+      >
         {/* Heading */}
         <h2 className="text-3xl font-bold text-center text-[#0E172A]">
           Create Account
@@ -13,8 +46,11 @@ const Register = () => {
 
         {/* Username */}
         <div className="space-y-1">
-          <label className="text-sm font-semibold text-gray-700">Username</label>
+          <label className="text-sm font-semibold text-gray-700">
+            Username
+          </label>
           <input
+            name="username"
             type="text"
             placeholder="Enter username"
             required
@@ -26,6 +62,7 @@ const Register = () => {
         <div className="space-y-1">
           <label className="text-sm font-semibold text-gray-700">Email</label>
           <input
+            name="email"
             type="email"
             placeholder="Enter email"
             required
@@ -35,8 +72,11 @@ const Register = () => {
 
         {/* Password */}
         <div className="space-y-1">
-          <label className="text-sm font-semibold text-gray-700">Password</label>
+          <label className="text-sm font-semibold text-gray-700">
+            Password
+          </label>
           <input
+            name="password"
             type="password"
             placeholder="Enter password"
             required

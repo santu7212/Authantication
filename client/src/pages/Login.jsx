@@ -3,10 +3,19 @@ import { NavLink } from "react-router-dom";
 import { AppContext } from "../components/context/AppContext";
 
 const Login = () => {
-  const { backendURL } = useContext(AppContext);
-  const handleLoginFormSubmit = (FormData) => {
-    const formInputData = Object.fromEntries(FormData.entries());
-    console.log(formInputData);
+  const { backendURL, setIsLoggedIn } = useContext(AppContext);
+  const handleLoginFormSubmit = async(FormData) => {
+
+   try {
+
+    await axios.post(backendURL + "/api/user/login",{email,password})
+     const formInputData = Object.fromEntries(FormData.entries());
+     console.log(formInputData);
+   } catch (error) {
+    console.log(error.message);
+    
+    
+   }
   };
   return (
     <div className="min-h-[calc(100vh-140px)] bg-[#111C2E] flex justify-center items-center px-4">
