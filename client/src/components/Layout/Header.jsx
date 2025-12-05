@@ -4,7 +4,7 @@ import { AppContext } from "../context/AppContext";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-  const {user}=useContext(AppContext)
+  const { user } = useContext(AppContext);
 
   return (
     <header className="bg-[#0E172A] text-white shadow-md sticky top-0 z-50">
@@ -33,16 +33,10 @@ const Header = () => {
           }`}
         >
           <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-[#06B6D4] font-semibold underline underline-offset-4"
-                  : "hover:text-[#06B6D4] transition"
-              }
-            >
+            {/* ❌ Removed NavLink — Now it's just text */}
+            <span className="text-gray-200 hover:text-[#06B6D4] transition cursor-default">
               Home
-            </NavLink>
+            </span>
           </li>
 
           <li>

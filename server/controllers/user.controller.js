@@ -123,7 +123,7 @@ const logOut = async (req, res) => {
 // send verify otp to the user email
 const sendVerifyOtp = async (req, res) => {
   try {
-    const { userId } = req.body;
+     const userId = req.userId;
     if (!userId) {
       return res
         .status(400)
@@ -318,8 +318,8 @@ const resetPassword = async (req, res) => {
 
 const getUserDetails = async (req, res) => {
   try {
-    const { userId } = req.body;
-    // console.log(userId);
+    const userId = req.userId;
+    console.log(userId);
     
     if (!userId) {
       return res
@@ -338,6 +338,7 @@ const getUserDetails = async (req, res) => {
         success: true,
         userData: {
           name: user.username,
+          email:user.email,
           isAccountVerified: user.isAccountVerified,
           createdAt: user.createdAt,
           updatedAt: user.updatedAt,
