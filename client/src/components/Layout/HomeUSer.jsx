@@ -2,13 +2,13 @@ import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 
 const HomeUser = () => {
-  const { user } = useContext(AppContext); // user = { name, email }
+  const { user } = useContext(AppContext);  
 
   return (
     <section className="bg-[#111C2E] text-white min-h-[80vh] flex items-center py-10">
       <div className="max-w-4xl mx-auto px-6">
 
-        {/* Welcome Card */}
+       
         <div className="bg-[#0E172A] p-8 rounded-xl shadow-lg border border-gray-700 mb-8">
           <h1 className="text-3xl font-bold mb-2">
             Welcome back, <span className="text-[#06B6D4]">{user?.name}</span> 👋
@@ -18,7 +18,7 @@ const HomeUser = () => {
           </p>
         </div>
 
-        {/* User Info Card */}
+        
         <div className="bg-gradient-to-r from-[#3BA1E3] to-[#5EC4F1] text-white p-6 rounded-xl shadow-md mb-8">
           <h2 className="text-xl font-semibold mb-4">Your Account Details</h2>
           <div className="space-y-2">
@@ -31,7 +31,7 @@ const HomeUser = () => {
           </div>
         </div>
 
-        {/* Optional Quick Actions */}
+         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-[#0E172A] p-6 rounded-xl shadow-lg border border-gray-700">
             <h3 className="text-xl font-semibold mb-2">Profile Status</h3>

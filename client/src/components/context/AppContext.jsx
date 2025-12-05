@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useEffect } from "react";
 import { createContext, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -9,6 +10,20 @@ export const AppContextProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(false);
 
+  const getAuthStatus=async()=>{
+    try {
+      const {data}=await axios.get(backendURL + "/api/user/is-auth")
+      if(data.success){
+        getUserData()
+      }
+      
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+
+      
+    }
+  }
+
   const getUserData = async () => {
     try {
       const { data } = await axios.get(backendURL + "/api/user/get-user");
@@ -17,6 +32,9 @@ export const AppContextProvider = ({ children }) => {
       toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
+  useEffect(()=>{
+    getAuthStatus()
+  },[])
 
   const value = {
     backendURL,

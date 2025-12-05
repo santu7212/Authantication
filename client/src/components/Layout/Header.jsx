@@ -10,7 +10,7 @@ const Header = () => {
     <header className="bg-[#0E172A] text-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-5 flex items-center justify-between">
 
-        {/* Brand */}
+      
         <NavLink to="/">
           <h1 className="text-3xl font-extrabold tracking-wide">
             <span className="text-[#06B6D4]">My</span>
@@ -18,7 +18,7 @@ const Header = () => {
           </h1>
         </NavLink>
 
-        {/* Mobile Menu Button */}
+        
         <button
           className="md:hidden text-4xl"
           onClick={() => setOpen(!open)}
