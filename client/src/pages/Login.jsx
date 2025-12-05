@@ -1,32 +1,31 @@
 import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AppContext } from "../components/context/AppContext";
-import axios from "axios"
+import axios from "axios";
 import { toast } from "react-toastify";
 
 const Login = () => {
-
-  const navigate=useNavigate()
-  const { backendURL} = useContext(AppContext);
-  const handleLoginFormSubmit = async(e) => {
+  const navigate = useNavigate();
+  const { backendURL, getUserData } = useContext(AppContext);
+  const handleLoginFormSubmit = async (e) => {
     e.preventDefault();
 
-   try {
-
-     const formData=new FormData(e.target)
-     const {email,password} = Object.fromEntries(formData.entries());
-     const {data}=await axios.post(backendURL + "/api/user/login",{email,password})
-     if(data.success){
-      toast.success("Login successfull🎉")
-      navigate("/")
-
-     }
-    
-   } catch (error) {
-    console.log(error.message);
-    
-    
-   }
+    try {
+      const formData = new FormData(e.target);
+      const { email, password } = Object.fromEntries(formData.entries());
+      const { data } = await axios.post(backendURL + "/api/user/login", {
+        email,
+        password,
+      });
+      axios.defaults.withCredentials = true;
+      if (data.success) {
+        toast.success("Login successfull🎉");
+        getUserData();
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
   return (
     <div className="min-h-[calc(100vh-140px)] bg-[#111C2E] flex justify-center items-center px-4">

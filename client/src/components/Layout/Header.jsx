@@ -1,8 +1,10 @@
- import { useState } from "react";
+ import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const {user}=useContext(AppContext)
 
   return (
     <header className="bg-[#0E172A] text-white shadow-md sticky top-0 z-50">
@@ -44,16 +46,29 @@ const Header = () => {
           </li>
 
           <li>
-            <NavLink
-              to="/login"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-[#06B6D4] font-semibold underline underline-offset-4"
-                  : "hover:text-[#06B6D4] transition"
-              }
-            >
-              Login
-            </NavLink>
+            {user ? (
+              <NavLink
+                to="/logout"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-[#06B6D4] font-semibold underline underline-offset-4"
+                    : "hover:text-[#06B6D4] transition"
+                }
+              >
+                Logout
+              </NavLink>
+            ) : (
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-[#06B6D4] font-semibold underline underline-offset-4"
+                    : "hover:text-[#06B6D4] transition"
+                }
+              >
+                Login
+              </NavLink>
+            )}
           </li>
         </ul>
       </div>
