@@ -26,14 +26,14 @@ const Header = () => {
           {open ? "✖" : "☰"}
         </button>
 
-        {/* Navigation */}
+        
         <ul
           className={`flex flex-col md:flex-row gap-7 text-lg font-medium absolute md:static left-0 w-full md:w-auto px-6 md:px-0 bg-[#0E172A] transition-all duration-300 ${
             open ? "top-20 py-6 shadow-lg" : "top-[-500px]"
           }`}
         >
           <li>
-            {/* ❌ Removed NavLink — Now it's just text */}
+           
             <span className="text-gray-200 hover:text-[#06B6D4] transition cursor-default">
               Home
             </span>
