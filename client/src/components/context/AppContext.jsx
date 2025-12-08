@@ -10,31 +10,34 @@ export const AppContextProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(false);
 
-  const getAuthStatus=async()=>{
+  const getAuthStatus = async () => {
     try {
-      const {data}=await axios.get(backendURL + "/api/user/is-auth")
-      if(data.success){
-        getUserData()
-      }
-      
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong");
+      const { data } = await axios.get(backendURL + "/api/user/is-auth", {
+        withCredentials: true,
+      });
 
-      
+      if (data.success) {
+        getUserData();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
-  }
+  };
 
   const getUserData = async () => {
     try {
-      const { data } = await axios.get(backendURL + "/api/user/get-user");
+      const { data } = await axios.get(backendURL + "/api/user/get-user", {
+        withCredentials: true,
+      });
       data.success ? setUser(data.userData) : toast.error(data.message);
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
-  useEffect(()=>{
-    getAuthStatus()
-  },[])
+  useEffect(() => {
+    getAuthStatus();
+  }, []);
 
   const value = {
     backendURL,

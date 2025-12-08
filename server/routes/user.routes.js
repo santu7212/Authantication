@@ -19,9 +19,9 @@ userRouter.post("/login", login);
 userRouter.post("/logout", logOut);
 userRouter.post("/send-otp", verifyJWT, sendVerifyOtp);
 userRouter.post("/verify-email", verifyJWT, verifyEmail);
-userRouter.post("/is-auth", verifyJWT, isAuthanticated);
+userRouter.get("/is-auth", verifyJWT, isAuthanticated);
 userRouter.post("/send-reset-otp", verifyJWT, sendResetOTP);
 userRouter.post("/reset-password", verifyJWT, resetPassword);
-userRouter.get("/get-user", verifyJWT, getUserDetails);
+userRouter.get("/get-user",verifyJWT,getUserDetails);
 
 export default userRouter;
