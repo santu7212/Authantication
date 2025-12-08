@@ -1,16 +1,15 @@
- import { useContext, useState } from "react";
+ import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 
 const Header = () => {
-  const [open, setOpen] = useState(false);
   const { user } = useContext(AppContext);
 
   return (
     <header className="bg-[#0E172A] text-white shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-5 flex items-center justify-between">
-
-      
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex items-center justify-between">
+        
+         
         <NavLink to="/">
           <h1 className="text-3xl font-extrabold tracking-wide">
             <span className="text-[#06B6D4]">My</span>
@@ -19,52 +18,40 @@ const Header = () => {
         </NavLink>
 
         
-        <button
-          className="md:hidden text-4xl"
-          onClick={() => setOpen(!open)}
-        >
-          {open ? "✖" : "☰"}
-        </button>
+        <div className="flex items-center gap-6">
+          {user ? (
+            <>
+              
+              <NavLink
+                to="/verify-email"
+                className="text-red-400 hover:text-red-500 transition font-medium"
+              >
+                Verify Email
+              </NavLink>
 
-        
-        <ul
-          className={`flex flex-col md:flex-row gap-7 text-lg font-medium absolute md:static left-0 w-full md:w-auto px-6 md:px-0 bg-[#0E172A] transition-all duration-300 ${
-            open ? "top-20 py-6 shadow-lg" : "top-[-500px]"
-          }`}
-        >
-          <li>
-           
-            <span className="text-gray-200 hover:text-[#06B6D4] transition cursor-default">
-              Home
-            </span>
-          </li>
-
-          <li>
-            {user ? (
+              {/* Logout */}
               <NavLink
                 to="/logout"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-[#06B6D4] font-semibold underline underline-offset-4"
-                    : "hover:text-[#06B6D4] transition"
-                }
+                className="text-red-400 hover:text-red-500 transition font-medium"
               >
                 Logout
               </NavLink>
-            ) : (
-              <NavLink
-                to="/login"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-[#06B6D4] font-semibold underline underline-offset-4"
-                    : "hover:text-[#06B6D4] transition"
-                }
-              >
-                Login
-              </NavLink>
-            )}
-          </li>
-        </ul>
+
+              
+              <div className="w-9 h-9 flex items-center justify-center rounded-full bg-[#06B6D4] text-black font-bold uppercase">
+                {user?.name?.charAt(0)}
+              </div>
+            </>
+          ) : (
+            <NavLink
+              to="/login"
+              className="hover:text-[#06B6D4] transition"
+            >
+              Login
+            </NavLink>
+          )}
+        </div>
+
       </div>
     </header>
   );
