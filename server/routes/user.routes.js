@@ -22,6 +22,6 @@ userRouter.post("/verify-email", verifyJWT, verifyEmail);
 userRouter.get("/is-auth", verifyJWT, isAuthanticated);
 userRouter.post("/send-reset-otp", verifyJWT, sendResetOTP);
 userRouter.post("/reset-password", verifyJWT, resetPassword);
-userRouter.get("/get-user",verifyJWT,getUserDetails);
+userRouter.get("/get-user", verifyJWT, getUserDetails);
 
 export default userRouter;

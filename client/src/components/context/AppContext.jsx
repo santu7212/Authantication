@@ -12,8 +12,9 @@ export const AppContextProvider = ({ children }) => {
 
   const getAuthStatus = async () => {
     try {
+        axios.defaults.withCredentials = true;
       const { data } = await axios.get(backendURL + "/api/user/is-auth", {
-        withCredentials: true,
+         
       });
 
       if (data.success) {
@@ -27,8 +28,10 @@ export const AppContextProvider = ({ children }) => {
 
   const getUserData = async () => {
     try {
+        axios.defaults.withCredentials = true;
       const { data } = await axios.get(backendURL + "/api/user/get-user", {
-        withCredentials: true,
+        
+        
       });
       data.success ? setUser(data.userData) : toast.error(data.message);
     } catch (error) {
