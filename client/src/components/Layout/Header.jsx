@@ -8,6 +8,22 @@ const Header = () => {
   const { user, setUser, setIsLoggedIn, backendURL } = useContext(AppContext);
   const navigate = useNavigate();
 
+  const sendVerificationOTP = async () => {
+    try {
+      axios.defaults.withCredentials = true;
+      const { data } = await axios.post(backendURL + "/api/user/send-otp");
+
+      if (data?.success) {
+        navigate("/verify-email");
+        toast.success(data.message)
+      }else{
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   const logout = async () => {
     try {
       axios.defaults.withCredentials = true;
@@ -22,6 +38,7 @@ const Header = () => {
       toast.error(error.message);
     }
   };
+
 
   return (
     <header className="bg-[#0E172A] text-white shadow-md sticky top-0 z-50">
@@ -39,12 +56,12 @@ const Header = () => {
               {user.isAccountVerified ? (
                 <p className="text-green-400 font-medium">Verified</p>
               ) : (
-                <NavLink
-                  to="/verify-email"
-                  className="text-red-400 hover:text-red-500 transition font-medium"
+                <p
+                  onClick={sendVerificationOTP}
+                  className=" cursor-pointer text-red-400 hover:text-red-500 transition font-medium"
                 >
                   Verify Email
-                </NavLink>
+                </p>
               )}
 
               <p
