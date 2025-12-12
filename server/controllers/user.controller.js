@@ -169,7 +169,8 @@ const sendVerifyOtp = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
   try {
-    const { userId, otp } = req.body;
+     const userId = req.userId;
+    const {  otp } = req.body;
     if (!userId) {
       return res
         .status(400)
