@@ -7,6 +7,7 @@ import AppLayout from "./components/Layout/AppLayout";
 import ErrorPage from "./pages/ErrorPage";
 import Register from "./pages/Register";
  import { ToastContainer, toast } from 'react-toastify';
+import EnterResetOTP from "./pages/EnterResetOTP";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
       { path: "/register", element: <Register /> },
       { path: "/login", element: <Login /> },
       { path: "/reset-password", element: <ResetPassword /> },
+      {path:"/enter-reset-otp",element:<EnterResetOTP/>},
       { path: "/verify-email", element: <VerifyEmail /> },
     ],
   },
