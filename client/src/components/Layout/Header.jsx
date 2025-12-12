@@ -1,11 +1,12 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const Header = () => {
-  const { user, setUser, setIsLoggedIn, backendURL } = useContext(AppContext);
+  const { user, setUser, setIsLoggedIn, backendURL, isLoggedIn } =
+    useContext(AppContext);
   const navigate = useNavigate();
 
   const sendVerificationOTP = async () => {
@@ -15,14 +16,19 @@ const Header = () => {
 
       if (data?.success) {
         navigate("/verify-email");
-        toast.success(data.message)
-      }else{
-        toast.error(data.message)
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
       }
     } catch (error) {
       toast.error(error.message);
     }
   };
+  useEffect(() => {
+    if (isLoggedIn && user?.isAccountVerified) {
+      navigate("/");
+    }
+  }, [isLoggedIn, user]);
 
   const logout = async () => {
     try {
@@ -38,7 +44,6 @@ const Header = () => {
       toast.error(error.message);
     }
   };
-
 
   return (
     <header className="bg-[#0E172A] text-white shadow-md sticky top-0 z-50">
