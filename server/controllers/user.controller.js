@@ -3,20 +3,22 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 import transporter from "../config/nodemailer.js";
-import  {EMAIL_VERIFY_TEMPLATE,PASSWORD_RESET_TEMPLATE} from "../config/email-templates.js"
-
+import {
+  EMAIL_VERIFY_TEMPLATE,
+  PASSWORD_RESET_TEMPLATE,
+} from "../config/email-templates.js";
 
 const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
     if (!username || !email || !password) {
-      res
+      return res
         .status(400)
         .json({ success: false, message: "Fill the field for register" });
     }
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         message: "User with this email already exist",
       });
@@ -86,7 +88,7 @@ const login = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure:  true,
+      secure: true,
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -109,7 +111,7 @@ const logOut = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      secure:  true,
+      secure: true,
       sameSite: "none",
     });
     return res
@@ -124,7 +126,7 @@ const logOut = async (req, res) => {
 // send verify otp to the user email
 const sendVerifyOtp = async (req, res) => {
   try {
-     const userId = req.userId;
+    const userId = req.userId;
     if (!userId) {
       return res
         .status(400)
@@ -153,7 +155,10 @@ const sendVerifyOtp = async (req, res) => {
       to: user.email,
       subject: " OTP Verifiaction",
       // text: `Your Account verification otp is ${otp}`,
-      html: EMAIL_VERIFY_TEMPLATE.replace("{{otp}}",otp).replace("{{email}}",user.email)
+      html: EMAIL_VERIFY_TEMPLATE.replace("{{otp}}", otp).replace(
+        "{{email}}",
+        user.email
+      ),
     };
     await transporter.sendMail(mailOptions);
 
@@ -171,8 +176,8 @@ const sendVerifyOtp = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
   try {
-     const userId = req.userId;
-    const {  otp } = req.body;
+    const userId = req.userId;
+    const { otp } = req.body;
     if (!userId) {
       return res
         .status(400)
@@ -195,12 +200,19 @@ const verifyEmail = async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid OTP" });
     }
 
-    if (user.verifyOtpExpiresAt > String(Date.now() + 24 * 60 * 60 * 1000)) {
+    // if (user.verifyOtpExpiresAt > String(Date.now() + 24 * 60 * 60 * 1000)) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Your OTP has expired please generate new OTP",
+    //   });
+    // }
+    if (user.verifyOtpExpiresAt < Date.now()) {
       return res.status(400).json({
         success: false,
         message: "Your OTP has expired please generate new OTP",
       });
     }
+
     user.isAccountVerified = true;
     (user.verifyOtp = ""), (user.verifyOtpExpiresAt = 0), await user.save();
     return res.status(200).json({
@@ -255,7 +267,10 @@ const sendResetOTP = async (req, res) => {
       to: user.email,
       subject: "RSET PASSWORD",
       // text: `Your one time password is   ${otp} for reseting yor account`,
-      html: PASSWORD_RESET_TEMPLATE.replace("{{otp}}",otp).replace("{{email}}",user.email)
+      html: PASSWORD_RESET_TEMPLATE.replace("{{otp}}", otp).replace(
+        "{{email}}",
+        user.email
+      ),
     };
     await transporter.sendMail(mailOptions);
 
@@ -324,7 +339,7 @@ const getUserDetails = async (req, res) => {
   try {
     const userId = req.userId;
     console.log(userId);
-    
+
     if (!userId) {
       return res
         .status(400)
@@ -336,20 +351,17 @@ const getUserDetails = async (req, res) => {
         .status(400)
         .json({ success: false, message: "User not found" });
     }
-    return (
-      res.status(200).
-      json({
-        success: true,
-        userData: {
-          name: user.username,
-          email:user.email,
-          isAccountVerified: user.isAccountVerified,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt,
-        },
-        message: "User detail fetch successfully",
-      })
-    );
+    return res.status(200).json({
+      success: true,
+      userData: {
+        name: user.username,
+        email: user.email,
+        isAccountVerified: user.isAccountVerified,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+      message: "User detail fetch successfully",
+    });
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ success: false, message: error.message });
