@@ -1,13 +1,32 @@
-import mongoose from "mongoose";
+ import mongoose from "mongoose";
+
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
 const connectDB = async () => {
-  try {
-    await mongoose.connect(`${process.env.MONGODB_URI}/Auth`);
-    console.log("Database connected sucessfully");
-  } catch (error) {
-    console.log("Database connection failure!!!", error.message);
+  if (cached.conn) {
+    return cached.conn;
   }
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(process.env.MONGODB_URI, {
+      dbName: "Auth",
+      bufferCommands: false,
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+    console.log("MongoDB connected successfully");
+  } catch (error) {
+    cached.promise = null;
+    throw error;
+  }
+
+  return cached.conn;
 };
 
-
-export default connectDB
+export default connectDB;
