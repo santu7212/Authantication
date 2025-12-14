@@ -4,4 +4,4 @@ import connectDB from "./config/db.js";
 
 await connectDB();
 
-export default app;
+export default app
