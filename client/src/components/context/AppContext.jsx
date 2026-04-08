@@ -1,4 +1,5 @@
 import axios from "axios";
+   axios.defaults.withCredentials = true;
 import { useEffect } from "react";
 import { createContext, useState } from "react";
 import { toast } from "react-toastify";
@@ -18,6 +19,7 @@ export const AppContextProvider = ({ children }) => {
       });
 
       if (data.success) {
+        setIsLoggedIn(true)
         getUserData();
       }
     } catch (error) {
