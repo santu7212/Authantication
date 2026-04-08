@@ -6,14 +6,32 @@ import userRouter from "./routes/user.routes.js";
 const app = express();
 const PORT = process.env.PORT;
 
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:5173",
+//       "https://authanticationsantu0.vercel.app",
+//     ],
+//     credentials: true,
+//   }),
+// );
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://authantication-rtw6.vercel.app",
+  "https://authantication-phi.vercel.app"
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://authanticationsantu0.vercel.app",
-    ],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed"));
+      }
+    },
     credentials: true,
-  }),
+  })
 );
 
 app.use(cookieParser());
