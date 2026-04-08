@@ -15,11 +15,29 @@ const PORT = process.env.PORT;
 //     credentials: true,
 //   }),
 // );
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://authantication-rtw6.vercel.app",
-  "https://authantication-phi.vercel.app"
-];
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   "https://authantication-rtw6.vercel.app",
+//   "https://authantication-phi.vercel.app"
+// ];
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (
+        !origin ||
+        origin.includes("vercel.app") ||
+        origin === "http://localhost:5173"
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed"));
+      }
+    },
+    credentials: true,
+  })
+);
+
+app.options("*", cors());
 
 app.use(
   cors({
