@@ -6,10 +6,12 @@ import userRouter from "./routes/user.routes.js";
 const app = express();
 const PORT = process.env.PORT
 
-app.use(
+ app.use(
   cors({
-    origin: ["http://localhost:5173", "https://authanticationsantu0.vercel.app/login",/\.vercel\.app$/],
-    
+    origin: [
+      "http://localhost:5173",
+      "https://authanticationsantu0.vercel.app"
+    ],
     credentials: true,
   })
 );

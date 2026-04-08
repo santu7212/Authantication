@@ -1,11 +1,11 @@
 import axios from "axios";
-   axios.defaults.withCredentials = true;
 import { useEffect } from "react";
 import { createContext, useState } from "react";
 import { toast } from "react-toastify";
 
 export const AppContext = createContext();
 
+axios.defaults.withCredentials = true;
 export const AppContextProvider = ({ children }) => {
   const backendURL = import.meta.env.VITE_BACKEND_URL;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
